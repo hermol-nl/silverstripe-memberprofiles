@@ -121,6 +121,56 @@ class MemberProfilePage extends Page
         'ApprovalGroups'   => Group::class,
     ];
 
+    /**
+     * Keep DataObject's form scaffolder away from everything this class builds
+     * a field for by hand - which is all of its own db fields and relations.
+     *
+     * In CMS 5, SiteTree::getCMSFields() assembled its own FieldList and never
+     * called parent::getCMSFields(), so DataObject::scaffoldFormFields() never
+     * ran for pages. CMS 6 ends SiteTree::getCMSFields() with
+     * `return parent::getCMSFields()`, so scaffolding now runs. Every db field
+     * and relation below therefore got an automatic field *and* the explicit one
+     * this class adds, and FieldList::getDataFields() throws on the first
+     * duplicate name:
+     *
+     *   RuntimeException: ... a field called 'SelectableGroups' appears twice
+     *
+     * which makes the page impossible to open in the CMS.
+     *
+     * Config arrays merge up the hierarchy, so SiteTree's own ignoreFields and
+     * ignoreRelations (VirtualPages, BackLinks) are preserved, and SiteTree's
+     * own fields still scaffold normally.
+     */
+    private static array $scaffold_cms_fields_settings = [
+        'ignoreFields' => [
+            'ProfileTitle',
+            'RegistrationTitle',
+            'AfterRegistrationTitle',
+            'ProfileContent',
+            'RegistrationContent',
+            'AfterRegistrationContent',
+            'AllowRegistration',
+            'AllowProfileViewing',
+            'AllowProfileEditing',
+            'AllowAdding',
+            'RegistrationRedirect',
+            'RequireApproval',
+            'EmailType',
+            'EmailFrom',
+            'EmailSubject',
+            'EmailTemplate',
+            'ConfirmationTitle',
+            'ConfirmationContent',
+        ],
+        'ignoreRelations' => [
+            'Fields',
+            'Sections',
+            'Groups',
+            'SelectableGroups',
+            'ApprovalGroups',
+        ],
+    ];
+
     private static array $defaults = [
         'ProfileTitle'             => 'Edit Profile',
         'RegistrationTitle'        => 'Register / Log In',
