@@ -68,7 +68,9 @@ class MemberProfileValidator extends RequiredFieldsValidator
         return null;
     }
 
-    public function php(array $data): bool
+    // Untyped on purpose: the parent leaves this parameter untyped (implicitly
+    // mixed), so narrowing it to `array` is a load-time fatal in PHP.
+    public function php($data): bool
     {
         $member = $this->member;
         $valid  = true;

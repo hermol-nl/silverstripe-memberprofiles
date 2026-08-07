@@ -9,6 +9,7 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CheckboxField_Readonly;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -82,7 +83,10 @@ class CheckableVisibilityField extends FormField
      * @param array|MemberProfileExtension $data {@see Form::loadDataFrom}
      * @return $this
      */
-    public function setValue(mixed $value, array $data = []): static
+    // Deliberately untyped: FormField::setValue($value, $data = null) is untyped in
+    // CMS 6, so a narrowed signature is a fatal incompatibility. $data is also not
+    // always an array - the else branch below handles a MemberProfileExtension.
+    public function setValue($value, $data = null)
     {
         $this->child->setValue($value);
 
@@ -123,9 +127,15 @@ class CheckableVisibilityField extends FormField
         $record->setPublicFields($public);
     }
 
-    public function validate($validator)
+    /**
+     * CMS 6 changed FormField::validate() from validate($validator): bool to
+     * validate(): ValidationResult - the validator is no longer passed in and
+     * each field returns its own result. Delegating to the wrapped child keeps
+     * this field transparent, exactly as before.
+     */
+    public function validate(): ValidationResult
     {
-        return $this->child->validate($validator);
+        return $this->child->validate();
     }
 
     public function Value(): ?string
@@ -150,7 +160,9 @@ class CheckableVisibilityField extends FormField
         return parent::setForm($form);
     }
 
-    public function Field(array $properties = []): DBHTMLText
+    // Untyped on purpose: the parent leaves this parameter untyped (implicitly
+    // mixed), so narrowing it to `array` is a load-time fatal in PHP.
+    public function Field($properties = []): DBHTMLText
     {
         return DBHTMLText::create_field(
             'HTMLFragment',

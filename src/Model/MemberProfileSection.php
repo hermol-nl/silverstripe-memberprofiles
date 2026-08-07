@@ -123,7 +123,10 @@ class MemberProfileSection extends DataObject
      *
      * @return string
      */
-    public function forTemplate(): mixed
+    // ModelData::forTemplate() is declared `: string` in CMS 6, so `mixed`
+    // widens the return type and is a load-time fatal. Subclasses override
+    // this and return a rendered string; the base only ever throws.
+    public function forTemplate(): string
     {
         throw new Exception("Please implement forTemplate() on {get_class($this)}.");
     }

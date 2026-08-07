@@ -178,7 +178,9 @@ class MemberProfilePage extends Page
      *
      * @param string $action
      */
-    public function Link(?string $action = null)
+    // SiteTree::Link($action = null) is untyped in CMS 6, so `?string` narrows
+    // it and is a load-time fatal.
+    public function Link($action = null)
     {
         if (!$action
             && Security::getCurrentUser()
