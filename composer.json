@@ -34,7 +34,7 @@
             "client"
         ],
         "branch-alias": {
-            "dev-master": "5.0.x-dev"
+            "dev-6": "6.0.x-dev"
         }
     },
     "autoload": {
@@ -53,5 +53,5 @@
         "silverstripe-australia/memberprofiles": "self.version"
     },
     "prefer-stable": true,
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

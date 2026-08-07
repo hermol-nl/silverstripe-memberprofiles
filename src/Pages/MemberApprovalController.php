@@ -81,8 +81,11 @@ class MemberApprovalController extends PageController
                 return Security::permissionFailure();
             }
 
+            // The members GridField lives under SecurityAdmin's 'users' tab and is
+            // itself named 'users', so the historical 'EditForm/field/Members'
+            // path 404s. Unchanged between CMS 5 (admin 2.4) and CMS 6 (admin 3.x).
             $link = $controller
-                ->Link('EditForm/field/Members/item/' . $member->ID . '/edit#MemberProfileRegistrationApproval');
+                ->Link('users/EditForm/field/users/item/' . $member->ID . '/#MemberProfileRegistrationApproval');
 
             return $this->redirect($link);
         }
