@@ -72,7 +72,13 @@ class MemberProfileExtension extends Extension
         }
     }
 
-    public function populateDefaults(): void
+    /**
+     * CMS 6 renamed this extension hook: DataObject::populateDefaults() now calls
+     * extend('onAfterPopulateDefaults'). Under the old name the method was never
+     * called, so new members got no ValidationKey and every approval/validation
+     * link carried an empty ?token=.
+     */
+    protected function onAfterPopulateDefaults(): void
     {
         $this->owner->ValidationKey = sha1(mt_rand() . mt_rand());
     }

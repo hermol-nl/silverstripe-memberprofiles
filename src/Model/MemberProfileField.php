@@ -232,7 +232,11 @@ class MemberProfileField extends DataObject
             $title = $field->getName();
         }
 
-        return $title;
+        // Title() can be null - CMS 6's ConfirmedPasswordField has no title of its own -
+        // and this method is typed string, so a Password profile field without a
+        // CustomTitle was a TypeError (a 500 on the registration page). An empty
+        // string renders exactly what 5.x rendered when null passed through untyped.
+        return (string)$title;
     }
 
     /**
