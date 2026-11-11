@@ -390,7 +390,7 @@ class MemberProfilePageController extends PageController
      * @param Form   $form
      * @param Member $member
      */
-    protected function getSettableGroupIdsFrom(Form $form, Member $member = null): array
+    protected function getSettableGroupIdsFrom(Form $form, ?Member $member = null): array
     {
         // first off check to see if groups were selected by the user. If so, we want
         // to remove that control from the form list (just in case someone's sent through an
